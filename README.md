@@ -71,7 +71,7 @@ To properly configure the Symfony application for Mercure, follow these steps:
 Now, you're ready to run the Symfony application. To start the Symfony server, use:
 
 ```bash
-symfony server:start
+symfony server:start --no-tls -d
 ```
 
 Once the server is running, you can access the chat room application at [http://localhost:8000](http://localhost:8000).
@@ -94,12 +94,6 @@ For production deployment, you may want to:
 - **Mercure Hub not starting**: Ensure that the Mercure executable is properly set up and the configuration is correct (JWT keys, Caddyfile, etc.).
 - **Messages not updating in real-time**: Verify that Mercure is running correctly and that Symfony is configured to use the correct Mercure Hub URL.
 - **Security**: Make sure to change the JWT secret keys to something more secure when deploying the application in production.
-
----
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
