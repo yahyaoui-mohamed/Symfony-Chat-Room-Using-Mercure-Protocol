@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Chat
+{% endblock %}
+
+{% block body %}
+
+	<div class="chat-wrapper">
+		<div class="chat-messages"></div>
+		<div class="chat-input">
+			<input type="text" id="message-input" placeholder="Your message ...">
+			<button id="send-button">Send</button>
+		</div>
+	</div>
+
+<script>
+    const messageInput = document.getElementById('message-input');
+    const sendButton = document.getElementById('send-button');
+    const messagesContainer = document.querySelector('.chat-messages');
+
+    messageInput.addEventListener("keydown", function(e){
+        if(e.key === "Enter" && this.value !== ""){
+            const message = messageInput.value;
+            messageInput.value = '';
+
+            fetch('/chat/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({message})
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Message sent successfully!', data);
+            })
+            .catch(error => {
+                console.error('Error sending message:', error);
+            });    
+        }
+    });
+
+    sendButton.addEventListener('click', () => {
+        if(messageInput.value !== ""){
+            const message = messageInput.value;
+            messageInput.value = '';
+
+            fetch('/chat/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({message})
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Message sent successfully!', data);
+            })
+            .catch(error => {
+                console.error('Error sending message:', error);
+            });
+        }
+    });
+
+    const name = "{{ name|escape('js') }}";
+
+    const eventSource = new EventSource("{{ mercure('https://example.com/my-private-topic')|escape('js') }}");
+
+    eventSource.onmessage = event => {
+        let data = JSON.parse(event.data);
+        let chatItem = document.createElement("div");
+        chatItem.setAttribute("class", "chat-item")
+        let sender = data.from === name ? "You" : data.from;
+        chatItem.innerHTML = sender === "You" ? `<b>${sender} : ${data.message}</b>` : `${sender} : ${data.message}`;
+
+        messagesContainer.append(chatItem);
+    }
+
+</script>
+
+{% endblock %}
